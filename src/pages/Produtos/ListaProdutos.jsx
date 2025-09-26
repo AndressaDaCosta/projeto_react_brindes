@@ -13,7 +13,7 @@ import {
 	CircularProgress,
 	Fab
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const ListaProdutos = () => {
@@ -145,6 +145,29 @@ const ListaProdutos = () => {
 										fontWeight="bold">
 										{formatarPreco(produto.preco)}
 									</Typography>
+									<Box
+										sx={{
+											mt: 2,
+											display: 'flex',
+											justifyContent: 'space-between',
+											gap: 1
+										}}>
+										<Button
+											variant="outlined"
+											size="small"
+											startIcon={<EditIcon />}
+											sx={{ flex: 1 }}>
+											Editar
+										</Button>
+										<Button
+											variant="outlined"
+											color="error"
+											size="small"
+											startIcon={<DeleteIcon />}
+											sx={{ flex: 1 }}>
+											Deletar
+										</Button>
+									</Box>
 								</CardContent>
 							</Card>
 						</Grid>
