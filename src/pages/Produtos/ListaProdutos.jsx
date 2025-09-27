@@ -16,12 +16,15 @@ import {
 	DialogTitle,
 	DialogContent,
 	DialogContentText,
-	DialogActions
+	DialogActions,
+	TextField,
+	InputAdornment
 } from '@mui/material';
 import {
 	Add as AddIcon,
 	Edit as EditIcon,
-	Delete as DeleteIcon
+	Delete as DeleteIcon,
+	Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +34,7 @@ const ListaProdutos = () => {
 	const [error, setError] = useState('');
 	const [openDialog, setOpenDialog] = useState(false);
 	const [produtoParaDeletar, setProdutoParaDeletar] = useState(null);
+	const [termoPesquisa, setTermoPesquisa] = useState('');
 
 	const navigate = useNavigate();
 
@@ -88,6 +92,15 @@ const ListaProdutos = () => {
 		}
 	};
 
+	const produtosFiltrados = produtos.filter((produto) => {
+		const termo = termoPesquisa.toLowerCase();
+		return (
+			produto.nome.toLowerCase().includes(termo) ||
+			produto.descricao.toLowerCase().includes(termo) ||
+			produto.preco.toString().includes(termo)
+		);
+	});
+
 	if (loading) {
 		return (
 			<Container
@@ -123,6 +136,22 @@ const ListaProdutos = () => {
 				</Button>
 			</Box>
 
+			<TextField
+				fullWidth
+				variant="outlined"
+				placeholder="Pesquisar por nome, descrição ou preço..."
+				value={termoPesquisa}
+				onChange={(e) => setTermoPesquisa(e.target.value)}
+				sx={{ mb: 3 }}
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<SearchIcon />
+						</InputAdornment>
+					)
+				}}
+			/>
+
 			{error && (
 				<Alert
 					severity="error"
@@ -131,16 +160,17 @@ const ListaProdutos = () => {
 				</Alert>
 			)}
 
-			{produtos.length === 0 && !error ? (
+			{produtosFiltrados.length === 0 && !error ? (
 				<Alert severity="info">
-					Nenhum produto cadastrado. Clique em "Novo Produto" para
-					adicionar o primeiro.
+					{termoPesquisa
+						? `Nenhum produto encontrado para "${termoPesquisa}"`
+						: 'Nenhum produto cadastrado. Clique em "Novo Produto" para adicionar o primeiro.'}
 				</Alert>
 			) : (
 				<Grid
 					container
 					spacing={3}>
-					{produtos.map((produto) => (
+					{produtosFiltrados.map((produto) => (
 						<Grid
 							item
 							xs={12}
