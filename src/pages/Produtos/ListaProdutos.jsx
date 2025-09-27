@@ -11,7 +11,12 @@ import {
 	Box,
 	Alert,
 	CircularProgress,
-	Fab
+	Fab,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +25,8 @@ const ListaProdutos = () => {
 	const [produtos, setProdutos] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
+	const [openDialog, setOpenDialog] = useState(false);
+	const [produtoParaDeletar, setProdutoParaDeletar] = useState(null);
 
 	const navigate = useNavigate();
 
@@ -48,6 +55,31 @@ const ListaProdutos = () => {
 			style: 'currency',
 			currency: 'BRL'
 		}).format(preco);
+	};
+
+	const handleAbrirDialog = (produto) => {
+		setProdutoParaDeletar(produto);
+		setOpenDialog(true);
+	};
+
+	const handleFecharDialog = () => {
+		setOpenDialog(false);
+		setProdutoParaDeletar(null);
+	};
+
+	const handleDeletarProduto = async () => {
+		if (!produtoParaDeletar) return;
+
+		try {
+			await axios.delete(`http://localhost:3001/produtos/${produtoParaDeletar.id}`);
+
+			setProdutos(produtos.filter(p => p.id !== produtoParaDeletar.id));
+
+			handleFecharDialog();
+		} catch (error) {
+			console.error('Erro ao deletar produto:', error);
+			setError('Erro ao deletar produto. Tente novamente.');
+		}
 	};
 
 	if (loading) {
@@ -164,7 +196,8 @@ const ListaProdutos = () => {
 											color="error"
 											size="small"
 											startIcon={<DeleteIcon />}
-											sx={{ flex: 1 }}>
+											sx={{ flex: 1 }}
+											onClick={() => handleAbrirDialog(produto)}>
 											Deletar
 										</Button>
 									</Box>
@@ -182,6 +215,34 @@ const ListaProdutos = () => {
 				onClick={() => navigate('/produtos/cadastro')}>
 				<AddIcon />
 			</Fab>
+
+			<Dialog
+				open={openDialog}
+				onClose={handleFecharDialog}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description">
+				<DialogTitle id="alert-dialog-title">
+					Confirmar exclusão
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-description">
+						Tem certeza que deseja excluir o produto "{produtoParaDeletar?.nome}"?
+						Esta ação não pode ser desfeita.
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleFecharDialog}>
+						Cancelar
+					</Button>
+					<Button
+						onClick={handleDeletarProduto}
+						color="error"
+						variant="contained"
+						autoFocus>
+						Excluir
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</Container>
 	);
 };
