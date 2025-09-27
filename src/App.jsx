@@ -30,6 +30,10 @@ function App() {
 					path="/produtos/cadastro"
 					Component={CadastroProduto}
 				/>
+				<Route
+					path="/produtos/editar/:id"
+					Component={CadastroProduto}
+				/>
 			</Routes>
 		</>
 	);

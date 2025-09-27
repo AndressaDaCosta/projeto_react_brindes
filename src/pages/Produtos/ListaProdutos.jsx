@@ -18,7 +18,11 @@ import {
 	DialogContentText,
 	DialogActions
 } from '@mui/material';
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import {
+	Add as AddIcon,
+	Edit as EditIcon,
+	Delete as DeleteIcon
+} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const ListaProdutos = () => {
@@ -71,9 +75,11 @@ const ListaProdutos = () => {
 		if (!produtoParaDeletar) return;
 
 		try {
-			await axios.delete(`http://localhost:3001/produtos/${produtoParaDeletar.id}`);
+			await axios.delete(
+				`http://localhost:3001/produtos/${produtoParaDeletar.id}`
+			);
 
-			setProdutos(produtos.filter(p => p.id !== produtoParaDeletar.id));
+			setProdutos(produtos.filter((p) => p.id !== produtoParaDeletar.id));
 
 			handleFecharDialog();
 		} catch (error) {
@@ -188,7 +194,12 @@ const ListaProdutos = () => {
 											variant="outlined"
 											size="small"
 											startIcon={<EditIcon />}
-											sx={{ flex: 1 }}>
+											sx={{ flex: 1 }}
+											onClick={() =>
+												navigate(
+													`/produtos/editar/${produto.id}`
+												)
+											}>
 											Editar
 										</Button>
 										<Button
@@ -197,7 +208,9 @@ const ListaProdutos = () => {
 											size="small"
 											startIcon={<DeleteIcon />}
 											sx={{ flex: 1 }}
-											onClick={() => handleAbrirDialog(produto)}>
+											onClick={() =>
+												handleAbrirDialog(produto)
+											}>
 											Deletar
 										</Button>
 									</Box>
@@ -226,14 +239,13 @@ const ListaProdutos = () => {
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-description">
-						Tem certeza que deseja excluir o produto "{produtoParaDeletar?.nome}"?
-						Esta ação não pode ser desfeita.
+						Tem certeza que deseja excluir o produto "
+						{produtoParaDeletar?.nome}"? Esta ação não pode ser
+						desfeita.
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleFecharDialog}>
-						Cancelar
-					</Button>
+					<Button onClick={handleFecharDialog}>Cancelar</Button>
 					<Button
 						onClick={handleDeletarProduto}
 						color="error"
