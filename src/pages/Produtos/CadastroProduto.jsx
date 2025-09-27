@@ -125,29 +125,38 @@ const CadastroProduto = () => {
 
 	return (
 		<Container
-			maxWidth="md"
-			sx={{ mt: 4, mb: 4 }}>
+			maxWidth="lg"
+			sx={{ py: 4 }}>
 			<Paper
-				elevation={3}
-				sx={{ p: 4 }}>
+				elevation={0}
+				sx={{
+					p: { xs: 3, md: 5 },
+					borderRadius: 3,
+					backgroundColor: 'background.paper',
+					border: '1px solid',
+					borderColor: 'grey.200',
+					boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+				}}>
 				<Typography
-					variant="h4"
+					variant="h3"
 					component="h1"
-					gutterBottom
 					align="center"
-					color="primary">
-					{isEdicao ? 'Editar Produto' : 'Cadastro de Produto'}
+					sx={{
+						mb: 1,
+						fontWeight: 600,
+						color: 'text.primary'
+					}}>
+					{isEdicao ? 'Editar Produto' : 'Novo Produto'}
 				</Typography>
 
 				<Typography
 					variant="body1"
-					gutterBottom
 					align="center"
 					color="text.secondary"
-					sx={{ mb: 3 }}>
+					sx={{ mb: 4, fontSize: '1.1rem', lineHeight: 1.6 }}>
 					{isEdicao
-						? 'Edite as informações do produto abaixo'
-						: 'Preencha as informações abaixo para cadastrar um novo produto'}
+						? 'Atualize as informações do produto conforme necessário'
+						: 'Preencha os detalhes para adicionar um novo produto ao seu catálogo'}
 				</Typography>
 
 				{message && (
@@ -161,16 +170,25 @@ const CadastroProduto = () => {
 				<Box
 					component="form"
 					onSubmit={handleSubmit}
-					sx={{ mt: 2 }}>
+					sx={{
+						display: 'grid',
+						gap: 3,
+						gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }
+					}}>
 					<TextField
 						fullWidth
 						label="Nome do produto"
 						value={nome}
 						onChange={(e) => setNome(e.target.value)}
-						margin="normal"
 						required
 						placeholder="Ex: Caneca Térmica Sage Green Pequena"
 						helperText="Digite o nome completo do produto"
+						sx={{
+							gridColumn: { xs: '1', md: '1 / -1' },
+							'& .MuiOutlinedInput-root': {
+								borderRadius: 3
+							}
+						}}
 					/>
 
 					<TextField
@@ -179,7 +197,6 @@ const CadastroProduto = () => {
 						type="number"
 						value={preco}
 						onChange={(e) => setPreco(e.target.value)}
-						margin="normal"
 						required
 						inputProps={{
 							step: '0.01',
@@ -187,6 +204,11 @@ const CadastroProduto = () => {
 						}}
 						placeholder="Ex: 24.00"
 						helperText="Valor em reais (R$)"
+						sx={{
+							'& .MuiOutlinedInput-root': {
+								borderRadius: 3
+							}
+						}}
 					/>
 
 					<TextField
@@ -194,12 +216,17 @@ const CadastroProduto = () => {
 						label="Descrição"
 						value={descricao}
 						onChange={(e) => setDescricao(e.target.value)}
-						margin="normal"
 						required
 						multiline
 						rows={4}
 						placeholder="Ex: Caneca elegante e compacta, mantém sua bebida quente ou fria por mais tempo."
 						helperText="Descreva as características e benefícios do produto"
+						sx={{
+							gridColumn: { xs: '1', md: '1 / -1' },
+							'& .MuiOutlinedInput-root': {
+								borderRadius: 3
+							}
+						}}
 					/>
 
 					<TextField
@@ -207,42 +234,74 @@ const CadastroProduto = () => {
 						label="URL da imagem"
 						value={imagem}
 						onChange={(e) => setImagem(e.target.value)}
-						margin="normal"
 						required
 						placeholder="Ex: https://exemplo.com/imagem.jpg"
 						helperText="Link da imagem do produto (HTTPS)"
+						sx={{
+							'& .MuiOutlinedInput-root': {
+								borderRadius: 3
+							}
+						}}
 					/>
 
 					<Box
 						sx={{
-							mt: 3,
+							gridColumn: { xs: '1', md: '1 / -1' },
+							mt: 2,
 							display: 'flex',
+							flexDirection: { xs: 'column', sm: 'row' },
 							gap: 2,
 							justifyContent: 'center'
 						}}>
 						<Button
 							type="button"
 							variant="outlined"
+							size="large"
 							onClick={() => navigate('/produtos')}
-							disabled={loading}>
+							disabled={loading}
+							sx={{
+								px: 4,
+								py: 1.5,
+								borderRadius: 3,
+								borderWidth: 2,
+								'&:hover': {
+									borderWidth: 2
+								}
+							}}>
 							Voltar
 						</Button>
 
 						<Button
 							type="submit"
 							variant="contained"
+							size="large"
 							disabled={loading}
 							startIcon={
-								loading && <CircularProgress size={20} />
+								loading && (
+									<CircularProgress
+										size={20}
+										color="inherit"
+									/>
+								)
 							}
-							sx={{ minWidth: 120 }}>
+							sx={{
+								minWidth: 140,
+								px: 4,
+								py: 1.5,
+								borderRadius: 2,
+								backgroundColor: 'primary.main',
+								'&:hover': {
+									backgroundColor: 'primary.dark',
+									transform: 'translateY(-1px)'
+								}
+							}}>
 							{loading
 								? isEdicao
 									? 'Atualizando...'
 									: 'Cadastrando...'
 								: isEdicao
-								? 'Atualizar'
-								: 'Cadastrar'}
+								? 'Atualizar Produto'
+								: 'Cadastrar Produto'}
 						</Button>
 					</Box>
 				</Box>

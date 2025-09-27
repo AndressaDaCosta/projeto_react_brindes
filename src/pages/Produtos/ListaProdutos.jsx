@@ -26,6 +26,7 @@ import {
 	Delete as DeleteIcon,
 	Search as SearchIcon
 } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const ListaProdutos = () => {
@@ -113,25 +114,50 @@ const ListaProdutos = () => {
 
 	return (
 		<Container
-			maxWidth="lg"
-			sx={{ mt: 4, mb: 4 }}>
+			maxWidth="xl"
+			sx={{ py: 4 }}>
 			<Box
 				sx={{
 					display: 'flex',
+					flexDirection: { xs: 'column', md: 'row' },
 					justifyContent: 'space-between',
-					alignItems: 'center',
-					mb: 3
+					alignItems: { xs: 'stretch', md: 'center' },
+					gap: 2,
+					mb: 4
 				}}>
-				<Typography
-					variant="h4"
-					component="h1"
-					color="primary">
-					Lista de Produtos
-				</Typography>
+				<Box>
+					<Typography
+						variant="h4"
+						component="h1"
+						sx={{
+							fontWeight: 600,
+							color: 'text.primary',
+							mb: 1
+						}}>
+						Gerenciar Produtos
+					</Typography>
+					<Typography
+						variant="body1"
+						color="text.secondary">
+						Gerencie seu catálogo de produtos de forma simples e
+						eficiente
+					</Typography>
+				</Box>
 				<Button
 					variant="contained"
+					size="large"
 					startIcon={<AddIcon />}
-					onClick={() => navigate('/produtos/cadastro')}>
+					onClick={() => navigate('/produtos/cadastro')}
+					sx={{
+						backgroundColor: 'primary.main',
+						borderRadius: 2,
+						px: 3,
+						py: 1.5,
+						'&:hover': {
+							backgroundColor: 'primary.dark',
+							transform: 'translateY(-1px)'
+						}
+					}}>
 					Novo Produto
 				</Button>
 			</Box>
@@ -142,11 +168,22 @@ const ListaProdutos = () => {
 				placeholder="Pesquisar por nome, descrição ou preço..."
 				value={termoPesquisa}
 				onChange={(e) => setTermoPesquisa(e.target.value)}
-				sx={{ mb: 3 }}
+				sx={{
+					mb: 4,
+					'& .MuiOutlinedInput-root': {
+						borderRadius: 3,
+						backgroundColor: 'background.paper',
+						'&:hover': {
+							'& .MuiOutlinedInput-notchedOutline': {
+								borderColor: 'primary.main'
+							}
+						}
+					}
+				}}
 				InputProps={{
 					startAdornment: (
 						<InputAdornment position="start">
-							<SearchIcon />
+							<SearchIcon color="action" />
 						</InputAdornment>
 					)
 				}}
@@ -169,7 +206,7 @@ const ListaProdutos = () => {
 			) : (
 				<Grid
 					container
-					spacing={3}>
+					spacing={{ xs: 2, md: 3 }}>
 					{produtosFiltrados.map((produto) => (
 						<Grid
 							item
@@ -179,70 +216,122 @@ const ListaProdutos = () => {
 							key={produto.id}>
 							<Card
 								sx={{
-									height: '100%',
+									height: 420,
 									display: 'flex',
-									flexDirection: 'column'
+									flexDirection: 'column',
+									transition: 'all 0.2s ease-in-out',
+									position: 'relative',
+									overflow: 'hidden',
+									borderRadius: 2,
+									border: '1px solid',
+									borderColor: 'grey.200',
+									boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+									'&:hover': {
+										transform: 'translateY(-2px)',
+										boxShadow:
+											'0 4px 12px rgba(0, 0, 0, 0.1)',
+										borderColor: 'grey.300'
+									}
 								}}>
 								<CardMedia
 									component="img"
-									height="200"
+									height="180"
 									image={produto.imagem}
 									alt={produto.nome}
-									sx={{ objectFit: 'cover' }}
+									sx={{
+										objectFit: 'cover',
+										backgroundColor: 'grey.50'
+									}}
 									onError={(e) => {
 										e.target.src =
-											'https://via.placeholder.com/300x200?text=Sem+Imagem';
+											'https://via.placeholder.com/300x180/f8fafc/64748b?text=Sem+Imagem';
 									}}
 								/>
-								<CardContent sx={{ flexGrow: 1 }}>
+								<CardContent
+									sx={{
+										flexGrow: 1,
+										p: 3,
+										display: 'flex',
+										flexDirection: 'column',
+										height: 240
+									}}>
 									<Typography
-										gutterBottom
 										variant="h6"
-										component="h2">
+										component="h2"
+										sx={{
+											fontWeight: 600,
+											mb: 1,
+											color: 'text.primary',
+											lineHeight: 1.3,
+											height: '2.6em',
+											display: '-webkit-box',
+											WebkitLineClamp: 2,
+											WebkitBoxOrient: 'vertical',
+											overflow: 'hidden'
+										}}>
 										{produto.nome}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="text.secondary"
-										sx={{ mb: 1 }}>
+										sx={{
+											mb: 'auto',
+											lineHeight: 1.5,
+											height: '4.5em',
+											display: '-webkit-box',
+											WebkitLineClamp: 3,
+											WebkitBoxOrient: 'vertical',
+											overflow: 'hidden'
+										}}>
 										{produto.descricao}
 									</Typography>
 									<Typography
 										variant="h6"
-										color="primary"
-										fontWeight="bold">
+										sx={{
+											fontWeight: 700,
+											color: 'primary.main',
+											mb: 2,
+											mt: 1
+										}}>
 										{formatarPreco(produto.preco)}
 									</Typography>
 									<Box
 										sx={{
-											mt: 2,
 											display: 'flex',
-											justifyContent: 'space-between',
+											justifyContent: 'flex-end',
 											gap: 1
 										}}>
-										<Button
-											variant="outlined"
+										<IconButton
 											size="small"
-											startIcon={<EditIcon />}
-											sx={{ flex: 1 }}
+											sx={{
+												color: 'grey.500',
+												'&:hover': {
+													color: 'primary.main',
+													backgroundColor:
+														'primary.50'
+												}
+											}}
 											onClick={() =>
 												navigate(
 													`/produtos/editar/${produto.id}`
 												)
 											}>
-											Editar
-										</Button>
-										<Button
-											variant="outlined"
-											color="error"
+											<EditIcon fontSize="small" />
+										</IconButton>
+										<IconButton
 											size="small"
-											startIcon={<DeleteIcon />}
-											sx={{ flex: 1 }}
+											sx={{
+												color: 'grey.500',
+												'&:hover': {
+													color: 'error.main',
+													backgroundColor: 'error.50'
+												}
+											}}
 											onClick={() =>
 												handleAbrirDialog(produto)
 											}>
-											Deletar
-										</Button>
+											<DeleteIcon fontSize="small" />
+										</IconButton>
 									</Box>
 								</CardContent>
 							</Card>
@@ -250,14 +339,6 @@ const ListaProdutos = () => {
 					))}
 				</Grid>
 			)}
-
-			<Fab
-				color="primary"
-				aria-label="add"
-				sx={{ position: 'fixed', bottom: 16, right: 16 }}
-				onClick={() => navigate('/produtos/cadastro')}>
-				<AddIcon />
-			</Fab>
 
 			<Dialog
 				open={openDialog}
